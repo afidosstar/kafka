@@ -6,3 +6,5 @@ packages
 .packages
 notes.md
 coverage/
+.idea
+.dart_tool

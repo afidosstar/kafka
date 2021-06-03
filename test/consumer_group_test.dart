@@ -15,14 +15,14 @@ void main() {
 
     setUp(() async {
       var host = await getDefaultHost();
-      var session = new KafkaSession([new ContactPoint(host, 9092)]);
+      var session = new KafkaSessionMock([new ContactPoint(host, 9092)]);
       var brokersMetadata = await session.getMetadata([_topicName].toSet());
 
       var metadata = await session.getConsumerMetadata('testGroup');
       _coordinator = metadata.coordinator;
       _badCoordinator =
           brokersMetadata.brokers.firstWhere((b) => b.id != _coordinator.id);
-      _session = spy(new KafkaSessionMock(), session);
+      _session = session;
     });
 
     tearDown(() async {
@@ -43,8 +43,8 @@ void main() {
     test('it tries to refresh coordinator host 3 times on fetchOffsets',
         () async {
       when(_session.getConsumerMetadata('testGroup')).thenReturn(
-          new GroupCoordinatorResponse(0, _badCoordinator.id,
-              _badCoordinator.host, _badCoordinator.port));
+          Future.value(new GroupCoordinatorResponse(0, _badCoordinator.id,
+              _badCoordinator.host, _badCoordinator.port)));
 
       var group = new ConsumerGroup(_session, 'testGroup');
       // Can't use expect(throws) here since it's async, so `verify` check below
@@ -70,7 +70,7 @@ void main() {
       ];
       when(_session.send(argThat(new isInstanceOf<Broker>()),
               argThat(new isInstanceOf<OffsetFetchRequest>())))
-          .thenReturn(new OffsetFetchResponse.fromOffsets(badOffsets));
+          .thenReturn(Future.value(new OffsetFetchResponse.fromOffsets(badOffsets)));
 
       var group = new ConsumerGroup(_session, 'testGroup');
       // Can't use expect(throws) here since it's async, so `verify` check below
@@ -96,8 +96,8 @@ void main() {
     test('it tries to refresh coordinator host 3 times on commitOffsets',
         () async {
       when(_session.getConsumerMetadata('testGroup')).thenReturn(
-          new GroupCoordinatorResponse(0, _badCoordinator.id,
-              _badCoordinator.host, _badCoordinator.port));
+          Future.value(new GroupCoordinatorResponse(0, _badCoordinator.id,
+              _badCoordinator.host, _badCoordinator.port)));
 
       var group = new ConsumerGroup(_session, 'testGroup');
       var offsets = [new ConsumerOffset(_topicName, 0, 3, '')];
@@ -136,4 +136,6 @@ void main() {
   });
 }
 
-class KafkaSessionMock extends Mock implements KafkaSession {}
+class KafkaSessionMock extends Mock implements KafkaSession {
+  KafkaSessionMock(List<ContactPoint> list);
+}
