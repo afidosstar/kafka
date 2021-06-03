@@ -81,11 +81,13 @@ class TopicMetadata {
     List partitions = reader.readArray(
         KafkaType.object, (reader) => new PartitionMetadata._readFrom(reader));
     // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-    return new TopicMetadata._(errorCode, topicName, partitions);
+    return new TopicMetadata._(errorCode, topicName, List<PartitionMetadata>.from(partitions));
   }
 
   PartitionMetadata getPartition(int partitionId) =>
       partitions.firstWhere((p) => p.partitionId == partitionId);
+
+
 
   @override
   String toString() =>
@@ -107,8 +109,8 @@ class PartitionMetadata {
     var errorCode = reader.readInt16();
     var partitionId = reader.readInt32();
     var leader = reader.readInt32();
-    List<int> replicas = reader.readArray(KafkaType.int32) as List<int>;
-    List<int> inSyncReplicas = reader.readArray(KafkaType.int32) as  List<int>;
+    List<int> replicas = List<int>.from(reader.readArray(KafkaType.int32));
+    List<int> inSyncReplicas = List<int>.from(reader.readArray(KafkaType.int32));
 
     return new PartitionMetadata._(
         errorCode,
