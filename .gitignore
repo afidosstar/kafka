@@ -6,5 +6,8 @@ packages
 .packages
 notes.md
 coverage/
-.idea
-.dart_tool
+.atom/
+.vscode/
+.idea/
+package_config.json
+.DS_Store
