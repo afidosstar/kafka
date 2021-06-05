@@ -44,7 +44,6 @@ class OffsetCommitRequest extends KafkaRequest {
     builder.addInt32(consumerGroupGenerationId);
     builder.addString(consumerId);
     builder.addInt32(groupedByTopic.length);
-    print('groupedByTopic$groupedByTopic');
     groupedByTopic.forEach((topicName, partitionOffsets) {
       builder.addString(topicName);
       builder.addInt32(partitionOffsets.length);
