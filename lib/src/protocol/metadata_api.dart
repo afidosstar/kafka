@@ -61,7 +61,7 @@ class MetadataResponse {
     });
 
     var topicMetadata = reader.readArray(
-        KafkaType.string, (reader) => new TopicMetadata._readFrom(reader));
+        KafkaType.object, (reader) => new TopicMetadata._readFrom(reader));
     return new MetadataResponse._(new List<Broker>.from(brokers),
         new List<TopicMetadata>.from(topicMetadata));
   }
