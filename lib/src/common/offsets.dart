@@ -1,11 +1,11 @@
 part of kafka.common;
 
-Map<String,List> groupBy(Iterable list, f(element)) {
-  Map<String, List>  grouped = new Map();
+Map<String,List<K>> groupBy<K>(Iterable list, f(element)) {
+  Map<String, List<K>>  grouped = new Map();
   for (var e in list) {
     var key = f(e);
     if (!grouped.containsKey(key)) {
-      grouped[key] = [];
+      grouped[key] = <K>[];
     }
     grouped[key].add(e);
   }
