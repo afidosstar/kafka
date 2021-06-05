@@ -1,11 +1,11 @@
 part of kafka.common;
 
-Map<dynamic, dynamic> groupBy(Iterable list, f(element)) {
-  var grouped = new Map();
+Map<String,List> groupBy(Iterable list, f(element)) {
+  Map<String, List>  grouped = new Map();
   for (var e in list) {
     var key = f(e);
     if (!grouped.containsKey(key)) {
-      grouped[key] = new List();
+      grouped[key] = [];
     }
     grouped[key].add(e);
   }

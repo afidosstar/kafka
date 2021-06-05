@@ -1,6 +1,8 @@
 /// Common dependencies for other Kafka libraries withing this package.
 library kafka.common;
 
+import 'dart:core';
+
 import 'package:logging/logging.dart';
 
 part 'src/common/errors.dart';
